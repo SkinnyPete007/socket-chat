@@ -21,10 +21,11 @@ app.get('/api/messages', (req, res) => {
 app.post('/api/messages', (req, res) => {
     const message = req.body.message;
     const userId = req.body.userId;
+    const location = req.body.location;
 
     if (message) {
         messages.push(message);
-        io.emit('user-chat-' + userId, message);  // Broadcast to all clients
+        io.emit('user-chat-' + userId + '-' + location, message);  // Broadcast to all clients
         res.status(201).json({ message: 'Message sent' });
     } else {
         res.status(400).json({ error: 'Message content required' });
@@ -34,10 +35,11 @@ app.post('/api/messages', (req, res) => {
 app.post('/api/notify', (req, res) => {
     const userId = req.body.userId;
     const message = req.body.message;
+    const location = req.body.location;
     
     if (userId && message) {
         messages.push(message);
-        io.emit('user-notify-' + userId, message);
+        io.emit('user-notify-' + userId + '-' + location, message);
         res.status(201).json({ message: 'Message sent' });
     } else {
         res.status(400).json({ error: 'Message content required' });
